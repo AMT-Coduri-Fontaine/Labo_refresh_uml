@@ -8,30 +8,43 @@ public class Twitter implements IObservable {
     public Twitter() {}
 
     public Twitter(List<IObserver> observers) {
-        throw new UnsupportedOperationException();
+        _observers = observers;
     }
 
     @Override
     public void subscribe(List<IObserver> observers) {
-        throw new UnsupportedOperationException();
+        for (IObserver observer : observers) {
+            if (_observers.contains(observer)) {
+                throw new SubscriberAlreadyExistsException();
+            }
+            _observers.add(observer);
+        }
     }
 
     @Override
     public void unsubscribe(IObserver observer) {
-        throw new UnsupportedOperationException();
+        if (_observers.isEmpty()) {
+            throw new EmptyListOfSubscribersException();
+        }
+        if (!_observers.remove(observer)) {
+            throw new SubscriberNotFoundException();
+        };
     }
 
     @Override
-    public void ObserverNotify() {
-        throw new UnsupportedOperationException();
+    public void ObserverNotify() throws EmptyListOfSubscribersException {
+        if (_observers.isEmpty()) {
+            throw new EmptyListOfSubscribersException();
+        }
+
     }
 
     public List<IObserver> getObservers() {
-        throw new UnsupportedOperationException();
+        return _observers;
     }
 
     public List<String> getTwits() {
-        throw new UnsupportedOperationException();
+        return _twits;
     }
 
     public void post(String twit) {
@@ -42,3 +55,4 @@ public class Twitter implements IObservable {
         throw new UnsupportedOperationException();
     }
 }
+
